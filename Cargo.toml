@@ -29,3 +29,7 @@ wasmtime = { version = "43", default-features = false, features = [
     "component-model",
 ] }
 wit-component = "0.245"
+
+[profile.debuggable]
+inherits = "release"
+debug = 2

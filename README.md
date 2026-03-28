@@ -207,6 +207,34 @@ screen /dev/tty.usbserial* 115200
 
 Type characters — they will be echoed back immediately. Backspace/DEL erases the previous character. Enter sends CR+LF for a proper newline.
 
+## Debugging (VS Code + probe-rs)
+
+### Prerequisites
+
+- [probe-rs](https://probe.rs/) installed
+- [probe-rs VS Code extension](https://marketplace.visualstudio.com/items?itemName=probe-rs.probe-rs-debugger) installed
+- Debug probe connected to the Pico 2 SWD pins (SWCLK, SWDIO, GND)
+
+### Usage
+
+1. Open the project in VS Code
+2. Set breakpoints in `src/main.rs` (or any source file)
+3. Press **F5** or select **Run -> Start Debugging**
+4. The `debuggable` profile builds with `release` optimizations + full debug symbols (`debug = 2`)
+5. probe-rs flashes the ELF and halts at your first breakpoint
+
+The pre-launch task runs:
+
+```bash
+cargo build --profile debuggable
+```
+
+This produces an ELF at `target/thumbv8m.main-none-eabihf/debuggable/embedded-wasm-uart.elf`.
+
+### Variables Panel
+
+> **Warning:** Do **NOT** expand the **Static** dropdown in the Variables panel. It attempts to enumerate every static variable in the binary — including thousands from wasmtime internals — over the SWD link, causing an infinite spin. Use the **Locals** and **Registers** dropdowns instead.
+
 ## Testing
 
 ```bash
