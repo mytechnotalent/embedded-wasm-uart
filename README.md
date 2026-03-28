@@ -19,6 +19,7 @@ A pure Embedded Rust project that runs a **WebAssembly Component Model runtime**
 - [Memory Layout](#memory-layout)
 - [Extending the Project](#extending-the-project)
 - [Troubleshooting](#troubleshooting)
+- [Tutorial](#tutorial)
 - [License](#license)
 
 ## Overview
@@ -479,6 +480,10 @@ Rebuild and reflash — only the WASM component changes.
 | `cargo build` doesn't pick up WASM changes      | Cached build artifacts                 | Run `cargo clean && cargo build --release`                                       |
 | ComponentEncoder fails                          | wit-bindgen metadata missing           | Ensure wasm-app uses `wit-bindgen` with `macros` + `realloc` features            |
 | Garbled characters in terminal                  | Baud rate mismatch                     | Ensure terminal is set to 115200 baud, 8N1                                       |
+
+## Tutorial
+
+For a comprehensive, line-by-line walkthrough of every source file and function in this project, see [TUTORIAL.md](TUTORIAL.md).
 
 ## License
 
