@@ -1,6 +1,8 @@
 # Embedded WASM UART Echo
 ## WebAssembly UART Echo on RP2350 Pico 2
 
+> Part of the [embedded-wasm](https://github.com/mytechnotalent/embedded-wasm) collection — a set of repos that runs a WebAssembly Component Model runtime (wasmtime + Pulley interpreter) directly on the RP2350 bare-metal with hardware capabilities exposed through WIT.
+
 A pure Embedded Rust project that runs a **WebAssembly Component Model runtime** (wasmtime + Pulley interpreter) directly on the RP2350 (Raspberry Pi Pico 2) bare-metal. A WASM component is AOT-compiled to Pulley bytecode on the host and executed on the device to echo UART characters through typed WIT interfaces (`embedded:platform/uart`) — no operating system and no standard library.
 
 ## Table of Contents
