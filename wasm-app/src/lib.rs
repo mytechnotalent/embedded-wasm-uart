@@ -10,16 +10,18 @@
 
 #![no_std]
 
+// Enable the global allocator for heap-backed collections.
 extern crate alloc;
 
-use core::panic::PanicInfo;
+use core::panic::PanicInfo; // Panic handler signature type.
 
 /// Global heap allocator required by the canonical ABI's `cabi_realloc`.
 #[global_allocator]
 static ALLOC: dlmalloc::GlobalDlmalloc = dlmalloc::GlobalDlmalloc;
 
-use embedded::platform::uart;
+use embedded::platform::uart; // Host-provided UART import.
 
+// Generate guest-side bindings for the `uart-echo` WIT world.
 wit_bindgen::generate!({
     world: "uart-echo",
     path: "../wit",
@@ -28,6 +30,7 @@ wit_bindgen::generate!({
 /// WASM guest component implementing the `uart-echo` world.
 struct UartEchoApp;
 
+// Register `UartEchoApp` as the component's exported implementation.
 export!(UartEchoApp);
 
 impl Guest for UartEchoApp {
