@@ -10,12 +10,12 @@
 
 #![allow(dead_code)]
 
-use core::cell::RefCell;
-use critical_section::Mutex;
-use fugit::HertzU32;
-use hal::Clock;
-use nb::block;
-use rp235x_hal as hal;
+use core::cell::RefCell; // Interior mutability for the UART peripheral.
+use critical_section::Mutex; // Interrupt-safe mutex for bare-metal concurrency.
+use fugit::HertzU32; // Typed frequency value for clock configuration.
+use hal::Clock; // Trait for reading peripheral clock frequencies.
+use nb::block; // Blocking adapter for non-blocking embedded-hal I/O.
+use rp235x_hal as hal; // RP2350 HAL shorthand.
 
 /// UART0 base address for direct register access in the panic handler.
 const UART0_BASE: u32 = 0x4007_0000;
