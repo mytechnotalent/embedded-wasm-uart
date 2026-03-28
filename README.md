@@ -1,9 +1,9 @@
 # Embedded WASM UART Echo
 ## WebAssembly UART Echo on RP2350 Pico 2
 
-> Part of the [embedded-wasm](https://github.com/mytechnotalent/embedded-wasm) collection — a set of repos that runs a WebAssembly Component Model runtime (wasmtime + Pulley interpreter) directly on the RP2350 bare-metal with hardware capabilities exposed through WIT.
+> Part of the [embedded-wasm](https://github.com/mytechnotalent/embedded-wasm) collection — a set of repos that runs a WebAssembly Component Model runtime (Wasmtime + Pulley interpreter) directly on the RP2350 bare-metal with hardware capabilities exposed through WIT.
 
-A pure Embedded Rust project that runs a **WebAssembly Component Model runtime** (wasmtime + Pulley interpreter) directly on the RP2350 (Raspberry Pi Pico 2) bare-metal. A WASM component is AOT-compiled to Pulley bytecode on the host and executed on the device to echo UART characters through typed WIT interfaces (`embedded:platform/uart`) — no operating system and no standard library.
+A pure Embedded Rust project that runs a **WebAssembly Component Model runtime** (Wasmtime + Pulley interpreter) directly on the RP2350 (Raspberry Pi Pico 2) bare-metal. A WASM component is AOT-compiled to Pulley bytecode on the host and executed on the device to echo UART characters through typed WIT interfaces (`embedded:platform/uart`) — no operating system and no standard library.
 
 ## Table of Contents
 
@@ -26,7 +26,7 @@ A pure Embedded Rust project that runs a **WebAssembly Component Model runtime**
 
 ## Overview
 
-This project demonstrates that WebAssembly is not just for browsers — it can run on a microcontroller with 512 KB of RAM. The firmware uses [wasmtime](https://github.com/bytecodealliance/wasmtime) with the **Pulley interpreter** (a portable, `no_std`-compatible WebAssembly runtime) and executes a precompiled WASM component that reads characters from UART0 and echoes them back with terminal-friendly backspace handling through typed WIT interfaces.
+This project demonstrates that WebAssembly is not just for browsers — it can run on a microcontroller with 512 KB of RAM. The firmware uses [Wasmtime](https://github.com/bytecodealliance/Wasmtime) with the **Pulley interpreter** (a portable, `no_std`-compatible WebAssembly runtime) and executes a precompiled WASM component that reads characters from UART0 and echoes them back with terminal-friendly backspace handling through typed WIT interfaces.
 
 **Key properties:**
 
@@ -35,7 +35,7 @@ This project demonstrates that WebAssembly is not just for browsers — it can r
 - **Minimal unsafe** — only unavoidable sites (heap init, boot metadata, component deserialize, panic handler UART)
 - **Tiny WASM component** — minimal footprint for the echo module
 - **AOT compilation** — WASM is compiled to Pulley bytecode on the host, no compilation on device
-- **Industry-standard runtime** — wasmtime is the reference WebAssembly implementation
+- **Industry-standard runtime** — Wasmtime is the reference WebAssembly implementation
 - **Terminal-friendly** — handles backspace/DEL, CR/LF for proper serial terminal interaction
 
 ## Architecture
@@ -48,7 +48,7 @@ This project demonstrates that WebAssembly is not just for browsers — it can r
 │  │            Firmware (src/main.rs)             │    │
 │  │                                               │    │
 │  │  ┌─────────┐  ┌────────┐  ┌───────────┐       │    │
-│  │  │  Heap   │  │wasmtime│  │ WIT Host  │       │    │
+│  │  │  Heap   │  │Wasmtime│  │ WIT Host  │       │    │
 │  │  │ 256 KiB │  │ Pulley │  │ Trait Impl│       │    │
 │  │  └─────────┘  └───┬────┘  └─────┬─────┘       │    │
 │  │                   │             │             │    │
@@ -93,9 +93,9 @@ embedded-wasm-uart/
 │   └── tests/
 │       └── integration.rs # 9 tests: loading, imports, echo, backspace, CR/LF
 ├── src/
-│   ├── main.rs            # Firmware: hardware init, wasmtime component runtime, WIT host traits
+│   ├── main.rs            # Firmware: hardware init, Wasmtime component runtime, WIT host traits
 │   ├── uart.rs            # UART0 driver (shared plug-and-play module)
-│   └── platform.rs        # Platform TLS glue for wasmtime no_std
+│   └── platform.rs        # Platform TLS glue for Wasmtime no_std
 ├── build.rs               # Compiles WASM app, encodes as component, AOT-compiles to Pulley
 ├── Cargo.toml             # Firmware dependencies
 ├── rp2350.x               # RP2350 memory layout linker script
@@ -115,15 +115,15 @@ The WASM component compiled to `wasm32-unknown-unknown`. Uses `wit_bindgen::gene
 
 ### `src/main.rs` — Firmware Entry Point
 
-Orchestrates everything: initializes the heap (256 KiB), clocks, and hardware peripherals, then boots the wasmtime Pulley engine. Uses `wasmtime::component::bindgen!()` to generate host-side types and implements `embedded::platform::uart::Host` on `HostState` to bridge WIT imports to the `uart` driver module. Deserializes the embedded `.cwasm` component bytecode via `Component::deserialize` and calls the WASM `run()` export via `UartEcho::instantiate()`. The panic handler uses `uart::panic_init()` and `uart::panic_write()` to output diagnostics over UART0 via raw register writes.
+Orchestrates everything: initializes the heap (256 KiB), clocks, and hardware peripherals, then boots the Wasmtime Pulley engine. Uses `wasmtime::component::bindgen!()` to generate host-side types and implements `embedded::platform::uart::Host` on `HostState` to bridge WIT imports to the `uart` driver module. Deserializes the embedded `.cwasm` component bytecode via `Component::deserialize` and calls the WASM `run()` export via `UartEcho::instantiate()`. The panic handler uses `uart::panic_init()` and `uart::panic_write()` to output diagnostics over UART0 via raw register writes.
 
 ### `src/uart.rs` — UART0 Driver (Shared Module)
 
-Provides both HAL-based and raw-register UART0 access. `uart::init()` accepts only the GPIO0 (TX) and GPIO1 (RX) pins and configures UART0 at 115200 baud, returning just the UART peripheral. Callers retain ownership of all other pins. `uart::store_global()` stores the UART in a `critical_section::Mutex`. HAL functions: `write_msg()`, `read_byte()`, `write_byte()`. Panic functions (raw registers, no HAL): `panic_init()`, `panic_write()`. Marked `#![allow(dead_code)]` — shared module, identical across repos.
+Provides both HAL-based and raw-register UART0 access. The `uart::init()` accepts only the GPIO0 (TX) and GPIO1 (RX) pins and configures UART0 at 115200 baud, returning just the UART peripheral. Callers retain ownership of all other pins. The `uart::store_global()` stores the UART in a `critical_section::Mutex`. HAL functions: `write_msg()`, `read_byte()`, `write_byte()`. Panic functions (raw registers, no HAL): `panic_init()`, `panic_write()`. Marked `#![allow(dead_code)]` — shared module, identical across repos.
 
-### `src/platform.rs` — wasmtime TLS Glue
+### `src/platform.rs` — Wasmtime TLS Glue
 
-Implements `wasmtime_tls_get()` and `wasmtime_tls_set()` using a global `AtomicPtr`. Required by wasmtime on `no_std` platforms. On this single-threaded MCU, TLS is just a single atomic pointer.
+Implements `wasmtime_tls_get()` and `wasmtime_tls_set()` using a global `AtomicPtr`. Required by Wasmtime on `no_std` platforms. On this single-threaded MCU, TLS is just a single atomic pointer.
 
 ### `build.rs` — AOT Build Script
 
@@ -236,7 +236,7 @@ This produces an ELF at `target/thumbv8m.main-none-eabihf/debuggable/embedded-wa
 
 ### Variables Panel
 
-> **Warning:** Do **NOT** expand the **Static** dropdown in the Variables panel. It attempts to enumerate every static variable in the binary — including thousands from wasmtime internals — over the SWD link, causing an infinite spin. Use the **Locals** and **Registers** dropdowns instead.
+> **Warning:** Do **NOT** expand the **Static** dropdown in the Variables panel. It attempts to enumerate every static variable in the binary — including thousands from Wasmtime internals — over the SWD link, causing an infinite spin. Use the **Locals** and **Registers** dropdowns instead.
 
 ## Testing
 
@@ -310,7 +310,7 @@ The echo logic handles three cases:
 
 The firmware boots in this sequence:
 
-1. **`init_heap()`** — 256 KiB heap for wasmtime via `embedded-alloc`.
+1. **`init_heap()`** — 256 KiB heap for Wasmtime via `embedded-alloc`.
 2. **`init_hardware()`** — Clocks, SIO, GPIO, UART0:
    - `uart::init(gpio0, gpio1)` → configures UART0 at 115200 baud (takes only TX/RX pins)
    - `uart::store_global()` → stores UART in mutex
@@ -410,7 +410,7 @@ world uart-echo {
 | ------------------ | ------------ | --------------- | ----------------------------------------------------- |
 | Flash              | `0x10000000` | 2 MiB           | Firmware code + embedded WASM component               |
 | RAM (striped)      | `0x20000000` | 512 KiB         | Stack + heap + data                                   |
-| Heap (allocated)   | —            | 256 KiB         | wasmtime engine, store, component, WASM linear memory |
+| Heap (allocated)   | —            | 256 KiB         | Wasmtime engine, store, component, WASM linear memory |
 | WASM linear memory | —            | 64 KiB (1 page) | WASM component's addressable memory                   |
 | WASM stack         | —            | 4 KiB           | WASM call stack                                       |
 
