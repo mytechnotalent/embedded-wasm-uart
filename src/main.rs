@@ -20,11 +20,16 @@ mod platform;
 /// UART peripheral setup and I/O helpers.
 mod uart;
 
-use core::panic::PanicInfo; // Panic handler signature type.
-use embedded_alloc::LlffHeap as Heap; // Linked-list first-fit heap allocator.
-use rp235x_hal as hal; // RP2350 HAL shorthand.
-use wasmtime::component::{Component, HasSelf}; // Component Model loader and linker traits.
-use wasmtime::{Config, Engine, Store}; // Wasmtime runtime core types.
+/// Panic handler signature type.
+use core::panic::PanicInfo;
+/// Linked-list first-fit heap allocator.
+use embedded_alloc::LlffHeap as Heap;
+/// RP2350 HAL shorthand.
+use rp235x_hal as hal;
+/// Component Model loader and linker traits.
+use wasmtime::component::{Component, HasSelf};
+/// Wasmtime runtime core types.
+use wasmtime::{Config, Engine, Store};
 
 // Generate host-side bindings for the `uart-echo` WIT world.
 wasmtime::component::bindgen!({

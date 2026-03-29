@@ -8,8 +8,10 @@
 //! wasmtime when running without an operating system. On this single-threaded
 //! embedded platform, TLS is a simple global atomic pointer.
 
-use core::ptr; // Null pointer constant for TLS initialization.
-use core::sync::atomic::{AtomicPtr, Ordering}; // Atomic pointer for single-threaded TLS.
+/// Null pointer constant for TLS initialization.
+use core::ptr;
+/// Atomic pointer for single-threaded TLS.
+use core::sync::atomic::{AtomicPtr, Ordering};
 
 /// Thread-local storage value used internally by the wasmtime runtime.
 static TLS_VALUE: AtomicPtr<u8> = AtomicPtr::new(ptr::null_mut());
