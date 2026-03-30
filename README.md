@@ -5,6 +5,8 @@
 
 A pure Embedded Rust project that runs a **WebAssembly Component Model runtime** (Wasmtime + Pulley interpreter) directly on the RP2350 (Raspberry Pi Pico 2) bare-metal. A WASM component is AOT-compiled to Pulley bytecode on the host and executed on the device to echo UART characters through typed WIT interfaces (`embedded:platform/uart`) — no operating system and no standard library.
 
+<br>
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -23,6 +25,8 @@ A pure Embedded Rust project that runs a **WebAssembly Component Model runtime**
 - [Troubleshooting](#troubleshooting)
 - [Tutorial](#tutorial)
 - [License](#license)
+
+<br>
 
 ## Overview
 
@@ -486,6 +490,8 @@ Rebuild and reflash — only the WASM component changes.
 ## Tutorial
 
 For a comprehensive, line-by-line walkthrough of every source file and function in this project, see [TUTORIAL.md](TUTORIAL.md).
+
+<br>
 
 ## License
 
