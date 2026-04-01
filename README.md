@@ -492,8 +492,6 @@ Rebuild and reflash — only the Wasm component changes.
 
 For a comprehensive, line-by-line walkthrough of every source file and function in this project, see [TUTORIAL.md](TUTORIAL.md).
 
-<br>
-
 ## Reverse Engineering
 
 A comprehensive reverse engineering analysis of the release ELF binary is available in [RE.md](RE.md). It covers every layer — ELF structure, ARM Thumb-2 firmware, Wasmtime runtime internals, the Pulley interpreter dispatch loop, the embedded cwasm blob, full Pulley ISA reference, complete bytecode disassembly, and a Ghidra analysis walkthrough.
