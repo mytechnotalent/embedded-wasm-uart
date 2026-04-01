@@ -24,6 +24,7 @@ A pure Embedded Rust project that runs a **WebAssembly Component Model runtime**
 - [Extending the Project](#extending-the-project)
 - [Troubleshooting](#troubleshooting)
 - [Tutorial](#tutorial)
+- [Reverse Engineering](#reverse-engineering)
 - [License](#license)
 
 <br>
@@ -490,6 +491,14 @@ Rebuild and reflash — only the Wasm component changes.
 ## Tutorial
 
 For a comprehensive, line-by-line walkthrough of every source file and function in this project, see [TUTORIAL.md](TUTORIAL.md).
+
+<br>
+
+## Reverse Engineering
+
+A comprehensive reverse engineering analysis of the release ELF binary is available in [RE.md](RE.md). It covers every layer — ELF structure, ARM Thumb-2 firmware, Wasmtime runtime internals, the Pulley interpreter dispatch loop, the embedded cwasm blob, full Pulley ISA reference, complete bytecode disassembly, and a Ghidra analysis walkthrough.
+
+For Pulley bytecode analysis inside Ghidra, use the [G-Pulley](https://github.com/mytechnotalent/G-Pulley) extension — a custom Ghidra processor module that disassembles Wasmtime's Pulley ISA and extracts cwasm blobs from firmware binaries.
 
 <br>
 
